@@ -16,6 +16,8 @@
         <h5>Talablar</h5>
         <p>{{ vacancy.requirements|linebreaks }}</p>
         <hr>
+        
+        <!-- ✅ ARIZA TUGMALARI -->
         {% if user.is_authenticated and user.role == 'candidate' %}
             {% if not applied and not vacancy.is_deadline_passed %}
                 <a href="{% url 'applications:apply' vacancy.id %}" class="btn btn-success">Ariza topshirish</a>
@@ -32,4 +34,100 @@
         <a href="{% url 'vacancies:list' %}" class="btn btn-secondary">Orqaga</a>
     </div>
 </div>
+
+<!-- ✅ KOMMENTLAR BO'LIMI -->
+<div class="card mt-4">
+    <div class="card-header bg-light">
+        <h5><i class="bi bi-chat-dots"></i> Fikrlar ({{ comments|length }})</h5>
+    </div>
+    <div class="card-body">
+        <!-- Komment qoldirish formasi -->
+        {% if user.is_authenticated %}
+            <form method="post" action="{% url 'comments:add' vacancy.id %}">
+                {% csrf_token %}
+                {{ comment_form.as_p }}
+                <button type="submit" class="btn btn-primary btn-sm"><i class="bi bi-send"></i> Fikr qoldirish</button>
+            </form>
+            <hr>
+        {% else %}
+            <p><a href="{% url 'accounts:login' %}">Kirish</a> yoki <a href="{% url 'accounts:register' %}">ro‘yxatdan o‘tish</a> va fikr qoldirish.</p>
+        {% endif %}
+
+        <!-- Kommentlar ro'yxati -->
+        {% for comment in comments %}
+            <div class="border-bottom pb-3 mb-3">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <strong>{{ comment.user.username }}</strong>
+                        <small class="text-muted ms-2">{{ comment.created_at|date:"d.m.Y H:i" }}</small>
+                    </div>
+                    <div>
+                        {% if request.user == comment.user %}
+                            <a href="{% url 'comments:edit' comment.id %}" class="btn btn-sm btn-outline-warning"><i class="bi bi-pencil"></i></a>
+                            <button class="btn btn-sm btn-outline-danger" onclick="deleteComment({{ comment.id }})"><i class="bi bi-trash"></i></button>
+                            <form id="delete-form-{{ comment.id }}" method="post" action="{% url 'comments:delete' comment.id %}" style="display:none;">
+                                {% csrf_token %}
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+                <p class="mt-2">{{ comment.content|linebreaks }}</p>
+                
+                <!-- Reply qilish tugmasi -->
+                <button class="btn btn-sm btn-link" onclick="showReplyForm({{ comment.id }})">Javob berish</button>
+                
+                <!-- Reply formasi -->
+                <div id="reply-form-{{ comment.id }}" style="display:none;" class="mt-2">
+                    <form method="post" action="{% url 'comments:add' vacancy.id %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                        <textarea name="content" class="form-control" rows="2" placeholder="Javob yozing..."></textarea>
+                        <button type="submit" class="btn btn-sm btn-primary mt-2">Javob yuborish</button>
+                    </form>
+                </div>
+                
+                <!-- Replylar -->
+                {% for reply in comment.replies.all %}
+                    <div class="border-start ps-3 ms-3 mt-2">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <strong>{{ reply.user.username }}</strong>
+                                <small class="text-muted ms-2">{{ reply.created_at|date:"d.m.Y H:i" }}</small>
+                            </div>
+                            <div>
+                                {% if request.user == reply.user %}
+                                    <a href="{% url 'comments:edit' reply.id %}" class="btn btn-sm btn-outline-warning"><i class="bi bi-pencil"></i></a>
+                                    <button class="btn btn-sm btn-outline-danger" onclick="deleteComment({{ reply.id }})"><i class="bi bi-trash"></i></button>
+                                    <form id="delete-form-{{ reply.id }}" method="post" action="{% url 'comments:delete' reply.id %}" style="display:none;">
+                                        {% csrf_token %}
+                                    </form>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <p class="mt-1">{{ reply.content|linebreaks }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% empty %}
+            <p class="text-muted">Hali fikr qoldirilmagan. Birinchi bo‘ling!</p>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    function showReplyForm(commentId) {
+        const form = document.getElementById('reply-form-' + commentId);
+        if (form.style.display === 'none') {
+            form.style.display = 'block';
+        } else {
+            form.style.display = 'none';
+        }
+    }
+
+    function deleteComment(commentId) {
+        if (confirm('Fikrni o‘chirishga ishonchingiz komilmi?')) {
+            document.getElementById('delete-form-' + commentId).submit();
+        }
+    }
+</script>
 {% endblock %}

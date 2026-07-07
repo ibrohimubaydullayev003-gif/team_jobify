@@ -37,6 +37,7 @@ urlpatterns = [
     path('applications/', include('applications.urls')),
     path('favorites/', include('favorites.urls')),
     path('notifications/', include('notifications.urls')),
+    path('comments/', include('comments.urls')),
 ]
 
 # Media va static fayllarni ishlab chiqish muhitida xizmat qilish

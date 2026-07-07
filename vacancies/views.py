@@ -71,11 +71,27 @@ def vacancy_delete(request, pk):
         return redirect('vacancies:list')
     return render(request, 'vacancies/vacancy_confirm_delete.html', {'vacancy': vacancy})
 
+# vacancies/views.py (faqat vacancy_detail funksiyasi)
+from comments.models import Comment
+from comments.forms import CommentForm
+
+# vacancies/views.py
 @login_required
 def vacancy_detail(request, pk):
     vacancy = get_object_or_404(Vacancy, pk=pk, is_active=True)
     applied = False
+    
     if request.user.role == 'candidate':
-        # ✅ `apply_set` – default related_name (model nomi `Apply` bo‘lgani uchun)
+        # ✅ apply_set ishlatiladi (default related_name)
         applied = vacancy.apply_set.filter(candidate=request.user).exists()
-    return render(request, 'vacancies/vacancy_detail.html', {'vacancy': vacancy, 'applied': applied})
+    
+    comments = vacancy.comments.filter(is_active=True, parent__isnull=True)
+    comment_form = CommentForm()
+    
+    context = {
+        'vacancy': vacancy,
+        'applied': applied,
+        'comments': comments,
+        'comment_form': comment_form,
+    }
+    return render(request, 'vacancies/vacancy_detail.html', context)
