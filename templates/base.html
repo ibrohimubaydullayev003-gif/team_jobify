@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Jobify - Ish topish oson{% endblock %}</title>
+    
+    <!-- Bootstrap 5.3 + Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    
+    <style>
+        :root {
+            --primary: #2563eb;
+            --dark: #1e2937;
+        }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: #f8fafc;
+        }
+        .navbar {
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary) !important;
+        }
+        .hero {
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+            color: white;
+            padding: 100px 0 80px;
+        }
+        .card {
+            transition: all 0.3s ease;
+            border: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        .footer {
+            background: #1e2937;
+            color: #cbd5e1;
+        }
+        .nav-link {
+            font-weight: 500;
+        }
+        .badge {
+            font-size: 0.75rem;
+        }
+    </style>
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <i class="bi bi-briefcase-fill"></i> Jobify
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'vacancies:list' %}">
+                                <i class="bi bi-briefcase"></i> Vakansiyalar
+                            </a>
+                        </li>
+                        
+                        {% if user.role == 'candidate' %}
+                            <li class="nav-item"><a class="nav-link" href="{% url 'resumes:list' %}"><i class="bi bi-file-earmark-person"></i> Rezyumelar</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'applications:my_applications' %}"><i class="bi bi-send"></i> Arizalarim</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'favorites:list' %}"><i class="bi bi-heart"></i> Sevimlilar</a></li>
+                        {% elif user.role == 'hr' %}
+                            <li class="nav-item"><a class="nav-link" href="{% url 'vacancies:create' %}"><i class="bi bi-plus-circle"></i> Vakansiya qo‘shish</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'applications:company_applications' %}"><i class="bi bi-people"></i> Arizalar</a></li>
+                        {% endif %}
+                        
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                <i class="bi bi-person-circle"></i> {{ user.get_full_name|default:user.username }}
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{% url 'profiles:profile' %}">Profil</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" href="{% url 'accounts:logout' %}">Chiqish</a></li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'accounts:login' %}">Kirish</a></li>
+                        <li class="nav-item"><a class="btn btn-primary btn-sm px-3 ms-2" href="{% url 'accounts:register' %}">Ro‘yxatdan o‘tish</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Messages -->
+    <div class="container mt-3">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    {% block content %}
+    {% endblock %}
+
+    <!-- Footer -->
+    <footer class="footer py-5 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5><i class="bi bi-briefcase-fill"></i> Jobify</h5>
+                    <p class="text-muted">O‘zbekistondagi eng qulay ish topish platformasi.</p>
+                </div>
+                <div class="col-md-3">
+                    <h6>Ish qidiruvchilar</h6>
+                    <ul class="list-unstyled text-muted">
+                        <li><a href="#" class="text-decoration-none">Vakansiyalar</a></li>
+                        <li><a href="#" class="text-decoration-none">Rezyume yaratish</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h6>Ish beruvchilar</h6>
+                    <ul class="list-unstyled text-muted">
+                        <li><a href="#" class="text-decoration-none">Vakansiya joylashtirish</a></li>
+                        <li><a href="#" class="text-decoration-none">Kandidatlar</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="text-center text-muted small">
+                &copy; 2026 Jobify. Barcha huquqlar himoyalangan.
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

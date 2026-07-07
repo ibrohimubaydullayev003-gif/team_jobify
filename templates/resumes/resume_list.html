@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Mening rezyumelarim</h2>
+    <a href="{% url 'resumes:create' %}" class="btn btn-success"><i class="bi bi-plus-circle"></i> Yangi rezyume</a>
+</div>
+
+<div class="row">
+    {% for resume in resumes %}
+        <div class="col-md-6 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ resume.title }}</h5>
+                    <p class="card-text"><i class="bi bi-file-earmark-pdf"></i> {{ resume.file.name|cut:"resumes/" }}</p>
+                    <p><small>Yuklangan: {{ resume.uploaded_at|date:"d.m.Y H:i" }}</small></p>
+                    <a href="{{ resume.file.url }}" target="_blank" class="btn btn-outline-primary btn-sm"><i class="bi bi-eye"></i> Ko‘rish</a>
+                    <a href="{% url 'resumes:update' resume.id %}" class="btn btn-outline-warning btn-sm"><i class="bi bi-pencil"></i></a>
+                    <a href="{% url 'resumes:delete' resume.id %}" class="btn btn-outline-danger btn-sm"><i class="bi bi-trash"></i></a>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <div class="col-12">
+            <p>Hali rezyume yaratilmagan. <a href="{% url 'resumes:create' %}">Yaratish</a></p>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

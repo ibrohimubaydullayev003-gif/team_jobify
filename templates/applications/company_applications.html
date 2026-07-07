@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Mening vakansiyalarim bo‘yicha arizalar</h2>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Nomzod</th>
+            <th>Vakansiya</th>
+            <th>Holat</th>
+            <th>Ariza vaqti</th>
+            <th>Harakat</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for apply in applies %}
+            <tr>
+                <td>{{ apply.candidate.username }}</td>
+                <td><a href="{% url 'vacancies:detail' apply.vacancy.id %}">{{ apply.vacancy.title }}</a></td>
+                <td><span class="badge bg-{% if apply.status == 'pending' %}warning{% elif apply.status == 'viewed' %}info{% elif apply.status == 'accepted' %}success{% else %}danger{% endif %}">{{ apply.get_status_display }}</span></td>
+                <td>{{ apply.applied_at|date:"d.m.Y H:i" }}</td>
+                <td>
+                    <form method="post" action="{% url 'applications:update_status' apply.id %}">
+                        {% csrf_token %}
+                        <select name="status" class="form-select form-select-sm d-inline-block w-auto">
+                            <option value="pending" {% if apply.status == 'pending' %}selected{% endif %}>Ko‘rib chiqilmoqda</option>
+                            <option value="viewed" {% if apply.status == 'viewed' %}selected{% endif %}>Ko‘rilgan</option>
+                            <option value="accepted" {% if apply.status == 'accepted' %}selected{% endif %}>Qabul qilingan</option>
+                            <option value="rejected" {% if apply.status == 'rejected' %}selected{% endif %}>Rad etilgan</option>
+                        </select>
+                        <button type="submit" class="btn btn-sm btn-primary">Yangilash</button>
+                    </form>
+                </td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="5">Hali arizalar yo‘q.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card border-danger">
+            <div class="card-header bg-danger text-white">
+                <h4><i class="bi bi-exclamation-triangle"></i> Vakansiyani o‘chirish</h4>
+            </div>
+            <div class="card-body">
+                <p class="lead">Siz <strong>"{{ vacancy.title }}"</strong> vakansiyasini o‘chirmoqchimisiz?</p>
+                <p class="text-muted">Bu amalni qaytarib bo‘lmaydi!</p>
+                <form method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Ha, o‘chirish</button>
+                    <a href="{% url 'vacancies:detail' vacancy.id %}" class="btn btn-secondary">Bekor qilish</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

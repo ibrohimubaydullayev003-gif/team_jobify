@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block title %}Jobify - Ish topish oson{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero text-center">
+    <div class="container">
+        <h1 class="display-4 fw-bold mb-3">Orzuingizdagi ishni toping</h1>
+        <p class="lead mb-4">O‘zbekistondagi minglab vakansiyalar orasida o‘zingizga mosini tanlang</p>
+        
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <form class="d-flex shadow-lg rounded-pill bg-white p-2" action="{% url 'vacancies:list' %}" method="get">
+                    <input type="text" name="search" class="form-control border-0 shadow-none" 
+                           placeholder="Lavozim, kompaniya yoki kalit so‘z..." style="border-radius: 50px 0 0 50px;">
+                    <button type="submit" class="btn btn-primary px-5 rounded-pill">
+                        <i class="bi bi-search"></i> Qidirish
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="mt-4">
+            <a href="{% url 'vacancies:list' %}" class="btn btn-light btn-lg px-5 me-3">Barcha vakansiyalarni ko‘rish</a>
+            {% if not user.is_authenticated %}
+                <a href="{% url 'accounts:register' %}" class="btn btn-outline-light btn-lg px-5">Bepul ro‘yxatdan o‘tish</a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- Stats -->
+<div class="container py-5">
+    <div class="row text-center">
+        <div class="col-md-4 mb-4">
+            <h2 class="fw-bold text-primary">1,250+</h2>
+            <p class="text-muted">Faol vakansiya</p>
+        </div>
+        <div class="col-md-4 mb-4">
+            <h2 class="fw-bold text-primary">480+</h2>
+            <p class="text-muted">Kompaniya</p>
+        </div>
+        <div class="col-md-4 mb-4">
+            <h2 class="fw-bold text-primary">12,400+</h2>
+            <p class="text-muted">Muvaffaqiyatli nomzod</p>
+        </div>
+    </div>
+</div>
+
+<!-- Features -->
+<div class="container py-5">
+    <h2 class="text-center mb-5 fw-bold">Nima uchun Jobify?</h2>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card h-100 text-center p-4">
+                <div class="display-5 text-primary mb-3"><i class="bi bi-lightning-charge"></i></div>
+                <h5>Tez va qulay</h5>
+                <p class="text-muted">Bir necha daqiqada rezyume yuklang va ariza yuboring.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 text-center p-4">
+                <div class="display-5 text-primary mb-3"><i class="bi bi-shield-check"></i></div>
+                <h5>Ishonchli kompaniyalar</h5>
+                <p class="text-muted">Faqat tasdiqlangan ish beruvchilar bilan ishlang.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 text-center p-4">
+                <div class="display-5 text-primary mb-3"><i class="bi bi-graph-up"></i></div>
+                <h5>Karyera o‘sishi</h5>
+                <p class="text-muted">O‘zingizni rivojlantiring va yuqori daromadli ish toping.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Popular Categories -->
+<div class="bg-white py-5">
+    <div class="container">
+        <h3 class="text-center mb-4">Mashhur yo‘nalishlar</h3>
+        <div class="row text-center">
+            <div class="col-6 col-md-3 mb-3"><a href="#" class="text-decoration-none"><i class="bi bi-code-square"></i><br>IT & Dasturlash</a></div>
+            <div class="col-6 col-md-3 mb-3"><a href="#" class="text-decoration-none"><i class="bi bi-building"></i><br>Moliya & Bank</a></div>
+            <div class="col-6 col-md-3 mb-3"><a href="#" class="text-decoration-none"><i class="bi bi-truck"></i><br>Logistika</a></div>
+            <div class="col-6 col-md-3 mb-3"><a href="#" class="text-decoration-none"><i class="bi bi-hospital"></i><br>Tibbiyot</a></div>
+        </div>
+    </div>
+</div>
+{% endblock %}

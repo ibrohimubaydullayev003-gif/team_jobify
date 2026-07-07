@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3>{{ vacancy.title }}</h3>
+    </div>
+    <div class="card-body">
+        <p><strong>Kompaniya:</strong> {{ vacancy.company.company_name }}</p>
+        <p><strong>Manzil:</strong> {{ vacancy.location }}</p>
+        <p><strong>Maosh:</strong> {% if vacancy.salary_min %}{{ vacancy.salary_min }} - {{ vacancy.salary_max }} so‘m{% else %}Kelishilgan{% endif %}</p>
+        <p><strong>Masofaviy:</strong> {% if vacancy.is_remote %}Ha{% else %}Yo‘q{% endif %}</p>
+        <p><strong>Muddati:</strong> {{ vacancy.deadline }}</p>
+        <hr>
+        <h5>Tavsif</h5>
+        <p>{{ vacancy.description|linebreaks }}</p>
+        <h5>Talablar</h5>
+        <p>{{ vacancy.requirements|linebreaks }}</p>
+        <hr>
+        {% if user.is_authenticated and user.role == 'candidate' %}
+            {% if not applied and not vacancy.is_deadline_passed %}
+                <a href="{% url 'applications:apply' vacancy.id %}" class="btn btn-success">Ariza topshirish</a>
+            {% elif applied %}
+                <button class="btn btn-secondary" disabled>Ariza topshirilgan</button>
+            {% else %}
+                <p class="text-danger">Muddat o‘tgan</p>
+            {% endif %}
+            <a href="{% url 'favorites:add' vacancy.id %}" class="btn btn-outline-warning"><i class="bi bi-heart"></i> Sevimlilarga qo‘shish</a>
+        {% elif user.is_authenticated and user.role == 'hr' %}
+            <a href="{% url 'vacancies:update' vacancy.id %}" class="btn btn-warning">Tahrirlash</a>
+            <a href="{% url 'vacancies:delete' vacancy.id %}" class="btn btn-danger">O‘chirish</a>
+        {% endif %}
+        <a href="{% url 'vacancies:list' %}" class="btn btn-secondary">Orqaga</a>
+    </div>
+</div>
+{% endblock %}

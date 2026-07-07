@@ -1,0 +1,21 @@
+<!-- templates/favorites/list.html -->
+{% extends 'base.html' %}
+{% block content %}
+<h2>Sevimli vakansiyalar</h2>
+<div class="row">
+    {% for favorite in favorites %}
+        <div class="col-md-6 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ favorite.vacancy.title }}</h5>
+                    <p>{{ favorite.vacancy.company.company_name }}</p>
+                    <a href="{% url 'vacancies:detail' favorite.vacancy.id %}" class="btn btn-outline-primary">Batafsil</a>
+                    <a href="{% url 'favorites:remove' favorite.vacancy.id %}" class="btn btn-outline-danger"><i class="bi bi-heart-fill"></i> O‘chirish</a>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <p>Sevimlilarga hali vakansiya qo‘shilmagan.</p>
+    {% endfor %}
+</div>
+{% endblock %}
