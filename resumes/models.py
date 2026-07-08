@@ -1,7 +1,7 @@
 # resumes/models.py
 from django.db import models
 from django.conf import settings
-from .validators import validate_pdf_size  # agar mavjud bo‘lsa
+from .validators import validate_pdf_size 
 
 def resume_upload_path(instance, filename):
     return f'resumes/{instance.candidate.id}/{filename}'

@@ -1,4 +1,3 @@
-# apps/applications/models.py
 from django.db import models
 from django.conf import settings
 from vacancies.models import Vacancy
@@ -16,7 +15,7 @@ class Apply(models.Model):
     applied_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('candidate', 'vacancy')  # bir martalik apply
+        unique_together = ('candidate', 'vacancy')  
 
     def __str__(self):
         return f"{self.candidate.username} -> {self.vacancy.title}"

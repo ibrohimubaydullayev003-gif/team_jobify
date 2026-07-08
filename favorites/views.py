@@ -1,4 +1,3 @@
-# favorites/views.py
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -8,7 +7,6 @@ from vacancies.models import Vacancy
 @login_required
 def favorite_list(request):
     favorites = request.user.favorites.select_related('vacancy').all()
-    # ✅ Template nomi to‘g‘rilandi (bizda `favorites/list.html` mavjud)
     return render(request, 'favorites/list.html', {'favorites': favorites})
 
 @login_required

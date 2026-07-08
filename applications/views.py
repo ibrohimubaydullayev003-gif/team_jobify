@@ -1,8 +1,6 @@
-# applications/views.py
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.utils import timezone
 from vacancies.models import Vacancy
 from .models import Apply
 
@@ -22,7 +20,6 @@ def apply_to_vacancy(request, vacancy_id):
         messages.warning(request, 'Siz allaqachon ariza topshirgansiz.')
         return redirect('vacancies:detail', pk=vacancy_id)
     
-    # ✅ TO‘G‘RI: resumes:create (app_name:url_name)
     if not request.user.resumes.exists():
         messages.error(request, 'Iltimos, avval rezyume yarating.')
         return redirect('resumes:create')

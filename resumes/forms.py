@@ -1,4 +1,3 @@
-# apps/resumes/forms.py
 from django import forms
 from .models import Resume
 from .validators import validate_pdf_size
@@ -13,6 +12,4 @@ class ResumeForm(forms.ModelForm):
     class Meta:
         model = Resume
         fields = ('title', 'file')
-        widgets = {
-            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Rezyume nomi'}),
-        }
+        

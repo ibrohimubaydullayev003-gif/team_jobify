@@ -1,4 +1,3 @@
-# vacancies/views.py
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -12,7 +11,6 @@ def vacancy_list(request):
     query = request.GET.get('q')
     location = request.GET.get('location')
     remote = request.GET.get('remote')
-    # ✅ Tartiblash qo‘shildi
     vacancies = Vacancy.objects.filter(is_active=True).order_by('-created_at')
 
     if query:
@@ -41,7 +39,6 @@ def vacancy_create(request):
             vacancy.company = request.user.company_profile
             vacancy.save()
             messages.success(request, 'Vakansiya yaratildi!')
-            # ✅ To‘g‘ri redirect
             return redirect('vacancies:list')
     else:
         form = VacancyForm()
@@ -55,7 +52,6 @@ def vacancy_update(request, pk):
         if form.is_valid():
             form.save()
             messages.success(request, 'Vakansiya yangilandi!')
-            # ✅ To‘g‘ri redirect
             return redirect('vacancies:list')
     else:
         form = VacancyForm(instance=vacancy)
@@ -67,11 +63,9 @@ def vacancy_delete(request, pk):
     if request.method == 'POST':
         vacancy.delete()
         messages.success(request, 'Vakansiya o‘chirildi.')
-        # ✅ To‘g‘ri redirect
         return redirect('vacancies:list')
     return render(request, 'vacancies/vacancy_confirm_delete.html', {'vacancy': vacancy})
 
-# vacancies/views.py (faqat vacancy_detail funksiyasi)
 from comments.models import Comment
 from comments.forms import CommentForm
 
@@ -82,7 +76,6 @@ def vacancy_detail(request, pk):
     applied = False
     
     if request.user.role == 'candidate':
-        # ✅ apply_set ishlatiladi (default related_name)
         applied = vacancy.apply_set.filter(candidate=request.user).exists()
     
     comments = vacancy.comments.filter(is_active=True, parent__isnull=True)

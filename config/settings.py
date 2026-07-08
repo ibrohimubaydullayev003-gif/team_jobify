@@ -90,6 +90,18 @@ DATABASES = {
 }
 
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'jobify_db',
+#         'USER': 'postgres',
+#         'PASSWORD': 'root',
+#         'HOST': 'localhost',      
+#         'PORT': 3001,           
+#     }
+# }
+
+
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
 
@@ -134,7 +146,7 @@ LOGIN_URL = 'accounts:login'
 
 LOGOUT_REDIRECT_URL = 'home'
 
-LOGIN_REDIRECT_URL = 'home'   # yoki 'vacancies:list'
+LOGIN_REDIRECT_URL = 'home'   
 
 
 AUTH_USER_MODEL = 'accounts.User'

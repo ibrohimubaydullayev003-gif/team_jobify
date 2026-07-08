@@ -1,4 +1,3 @@
-# apps/resumes/validators.py
 from django.core.exceptions import ValidationError
 
 def validate_pdf_size(value):

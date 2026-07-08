@@ -1,4 +1,3 @@
-# apps/resumes/views.py
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -10,14 +9,13 @@ def resume_list(request):
     resumes = request.user.resumes.all()
     return render(request, 'resumes/resume_list.html', {'resumes': resumes})
 
-# resumes/views.py
 @login_required
 def resume_create(request):
     if request.method == 'POST':
         form = ResumeForm(request.POST, request.FILES)
         if form.is_valid():
             resume = form.save(commit=False)
-            resume.candidate = request.user   # ✅ to‘g‘ri
+            resume.candidate = request.user   
             resume.save()
             messages.success(request, 'Rezyume yaratildi!')
             return redirect('resumes:list')
@@ -38,7 +36,6 @@ def resume_update(request, pk):
         form = ResumeForm(instance=resume)
     return render(request, 'resumes/resume_form.html', {'form': form, 'action': 'Yangilash'})
 
-# resumes/views.py
 @login_required
 def resume_delete(request, pk):
     try:

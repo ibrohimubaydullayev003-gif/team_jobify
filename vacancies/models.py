@@ -1,4 +1,3 @@
-# apps/vacancies/models.py
 from django.db import models
 from django.conf import settings
 from profiles.models import CompanyProfile
