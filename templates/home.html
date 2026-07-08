@@ -1,91 +1,127 @@
 {% extends 'base.html' %}
 
-{% block title %}Jobify - Ish topish oson{% endblock %}
+{% block title %}Jobify - O'zbekistonda ish topish oson{% endblock %}
 
 {% block content %}
+
 <!-- Hero Section -->
-<section class="hero text-center">
-    <div class="container">
-        <h1 class="display-4 fw-bold mb-3">Orzuingizdagi ishni toping</h1>
-        <p class="lead mb-4">O‘zbekistondagi minglab vakansiyalar orasida o‘zingizga mosini tanlang</p>
-        
+<section class="hero position-relative overflow-hidden" style="background: linear-gradient(135deg, #0d6efd 0%, #6610f2 100%); min-height: 620px; display: flex; align-items: center;">
+    <div class="container position-relative z-3">
         <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <form class="d-flex shadow-lg rounded-pill bg-white p-2" action="{% url 'vacancies:list' %}" method="get">
-                    <input type="text" name="search" class="form-control border-0 shadow-none" 
-                           placeholder="Lavozim, kompaniya yoki kalit so‘z..." style="border-radius: 50px 0 0 50px;">
-                    <button type="submit" class="btn btn-primary px-5 rounded-pill">
-                        <i class="bi bi-search"></i> Qidirish
-                    </button>
-                </form>
+            <div class="col-lg-10 text-center text-white">
+                <h1 class="display-3 fw-bold mb-4">
+                    Orzuingizdagi ishni <span class="text-warning">tezroq</span> toping
+                </h1>
+                <p class="lead fs-4 mb-5 opacity-90">
+                    O‘zbekistondagi 10,000+ vakansiya orasida o‘zingizga mos keladiganini tanlang
+                </p>
+
+                <!-- Advanced Search -->
+                <div class="bg-white rounded-4 shadow-lg p-2 p-md-3 mx-auto" style="max-width: 850px;">
+                    <form class="row g-2 align-items-center" action="{% url 'vacancies:list' %}" method="get">
+                        <div class="col-lg-5">
+                            <input type="text" name="search" class="form-control form-control-lg border-0" 
+                                   placeholder="Lavozim, kompaniya yoki kalit so‘z..." style="font-size: 1.1rem;">
+                        </div>
+                        <div class="col-lg-3">
+                            <select name="city" class="form-select form-select-lg border-0">
+                                <option value="">Barcha shaharlar</option>
+                                <option value="Toshkent">Toshkent</option>
+                                <option value="Samarqand">Samarqand</option>
+                                <option value="Buxoro">Buxoro</option>
+                                <option value="Andijon">Andijon</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-2">
+                            <select name="category" class="form-select form-select-lg border-0">
+                                <option value="">Yo‘nalish</option>
+                                <option value="it">IT & Dasturlash</option>
+                                <option value="finance">Moliya</option>
+                                <option value="sales">Savdo</option>
+                                <option value="marketing">Marketing</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-2">
+                            <button type="submit" class="btn btn-primary btn-lg w-100 rounded-3 fw-semibold">
+                                <i class="bi bi-search me-2"></i>Qidirish
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="mt-4">
+                    <a href="{% url 'vacancies:list' %}" class="btn btn-light btn-lg px-5 me-3 shadow-sm">
+                        Barcha vakansiyalarni ko‘rish
+                    </a>
+                    {% if not user.is_authenticated %}
+                        <a href="{% url 'accounts:register' %}" class="btn btn-outline-light btn-lg px-5">
+                            Bepul ro‘yxatdan o‘tish
+                        </a>
+                    {% endif %}
+                </div>
             </div>
-        </div>
-        
-        <div class="mt-4">
-            <a href="{% url 'vacancies:list' %}" class="btn btn-light btn-lg px-5 me-3">Barcha vakansiyalarni ko‘rish</a>
-            {% if not user.is_authenticated %}
-                <a href="{% url 'accounts:register' %}" class="btn btn-outline-light btn-lg px-5">Bepul ro‘yxatdan o‘tish</a>
-            {% endif %}
         </div>
     </div>
 </section>
 
 <!-- Stats -->
-<div class="container py-5">
-    <div class="row text-center">
-        <div class="col-md-4 mb-4">
-            <h2 class="fw-bold text-primary">1,250+</h2>
-            <p class="text-muted">Faol vakansiya</p>
-        </div>
-        <div class="col-md-4 mb-4">
-            <h2 class="fw-bold text-primary">480+</h2>
-            <p class="text-muted">Kompaniya</p>
-        </div>
-        <div class="col-md-4 mb-4">
-            <h2 class="fw-bold text-primary">12,400+</h2>
-            <p class="text-muted">Muvaffaqiyatli nomzod</p>
-        </div>
-    </div>
-</div>
-
-<!-- Features -->
-<div class="container py-5">
-    <h2 class="text-center mb-5 fw-bold">Nima uchun Jobify?</h2>
-    <div class="row g-4">
-        <div class="col-md-4">
-            <div class="card h-100 text-center p-4">
-                <div class="display-5 text-primary mb-3"><i class="bi bi-lightning-charge"></i></div>
-                <h5>Tez va qulay</h5>
-                <p class="text-muted">Bir necha daqiqada rezyume yuklang va ariza yuboring.</p>
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row text-center g-4">
+            <div class="col-md-4">
+                <h2 class="fw-bold text-primary mb-1">12,450+</h2>
+                <p class="text-muted mb-0">Faol vakansiya</p>
             </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card h-100 text-center p-4">
-                <div class="display-5 text-primary mb-3"><i class="bi bi-shield-check"></i></div>
-                <h5>Ishonchli kompaniyalar</h5>
-                <p class="text-muted">Faqat tasdiqlangan ish beruvchilar bilan ishlang.</p>
+            <div class="col-md-4">
+                <h2 class="fw-bold text-primary mb-1">680+</h2>
+                <p class="text-muted mb-0">Faol kompaniya</p>
             </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card h-100 text-center p-4">
-                <div class="display-5 text-primary mb-3"><i class="bi bi-graph-up"></i></div>
-                <h5>Karyera o‘sishi</h5>
-                <p class="text-muted">O‘zingizni rivojlantiring va yuqori daromadli ish toping.</p>
+            <div class="col-md-4">
+                <h2 class="fw-bold text-primary mb-1">18,920+</h2>
+                <p class="text-muted mb-0">Muvaffaqiyatli ishga joylashganlar</p>
             </div>
         </div>
     </div>
-</div>
+</section>
 
 <!-- Popular Categories -->
-<div class="bg-white py-5">
+<section class="py-5">
     <div class="container">
-        <h3 class="text-center mb-4">Mashhur yo‘nalishlar</h3>
-        <div class="row text-center">
-            <div class="col-6 col-md-3 mb-3"><a href="#" class="text-decoration-none"><i class="bi bi-code-square"></i><br>IT & Dasturlash</a></div>
-            <div class="col-6 col-md-3 mb-3"><a href="#" class="text-decoration-none"><i class="bi bi-building"></i><br>Moliya & Bank</a></div>
-            <div class="col-6 col-md-3 mb-3"><a href="#" class="text-decoration-none"><i class="bi bi-truck"></i><br>Logistika</a></div>
-            <div class="col-6 col-md-3 mb-3"><a href="#" class="text-decoration-none"><i class="bi bi-hospital"></i><br>Tibbiyot</a></div>
+        <h2 class="text-center fw-bold mb-5">Mashhur yo‘nalishlar</h2>
+        <div class="row g-4">
+            <div class="col-6 col-md-3 col-lg-2">
+                <a href="#" class="text-decoration-none">
+                    <div class="card h-100 border-0 shadow-sm hover-shadow text-center p-4">
+                        <div class="display-6 text-primary mb-3"><i class="bi bi-code-square"></i></div>
+                        <h6>IT & Dasturlash</h6>
+                        <small class="text-muted">1,284 vakansiya</small>
+                    </div>
+                </a>
+            </div>
+            <!-- Boshqa kategoriyalarni ham shu tarzda qoldirdim -->
+            <div class="col-6 col-md-3 col-lg-2">
+                <a href="#" class="text-decoration-none">
+                    <div class="card h-100 border-0 shadow-sm hover-shadow text-center p-4">
+                        <div class="display-6 text-success mb-3"><i class="bi bi-building"></i></div>
+                        <h6>Moliya & Bank</h6>
+                        <small class="text-muted">892 vakansiya</small>
+                    </div>
+                </a>
+            </div>
+            <!-- Yana 4 ta kategoriya qo'shishingiz mumkin -->
         </div>
     </div>
-</div>
+</section>
+
+<!-- CTA for Employers -->
+<section class="py-5 bg-primary text-white text-center">
+    <div class="container">
+        <h2 class="mb-3">Sizning kompaniyangiz uchun eng yaxshi nomzodlarni topmoqchimisiz?</h2>
+        <p class="lead mb-4">10,000+ faol izlovchilar har kuni saytimizda</p>
+        <a href="{% url 'vacancies:list' %}" class="btn btn-light btn-lg px-5">
+            Vakansiya joylashtirish
+        </a>
+    </div>
+</section>
+
 {% endblock %}
