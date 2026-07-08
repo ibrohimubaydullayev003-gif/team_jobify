@@ -1,71 +1,85 @@
-# accounts/forms.py
 from django import forms
-from django.contrib.auth import get_user_model
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 
-User = get_user_model()   # <-- Bu muhim!
 
 class UserRegistrationForm(forms.ModelForm):
-    password1 = forms.CharField(
-        label='Parol',
-        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Parol'})
-    )
-    password2 = forms.CharField(
-        label='Parolni tasdiqlang',
-        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Parolni qayta kiriting'})
-    )
+    password1 = forms.CharField()
+    password2 = forms.CharField()
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'phone', 'role')
-        widgets = {
-            'username': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Foydalanuvchi nomi'}),
-            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Elektron pochta'}),
-            'phone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Telefon raqam'}),
-            'role': forms.Select(attrs={'class': 'form-control'}, choices=User.ROLE_CHOICES),
-        }
+        fields = ['username', 'email']
 
     def clean_username(self):
         username = self.cleaned_data.get('username')
         if User.objects.filter(username=username).exists():
-            raise ValidationError('Bu foydalanuvchi nomi allaqachon mavjud.')
+            raise ValidationError("Bu username band.")
         return username
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
         if User.objects.filter(email=email).exists():
-            raise ValidationError('Bu email allaqachon ro‘yxatdan o‘tgan.')
+            raise ValidationError("Bu email band.")
         return email
-
-    def clean_password1(self):
-        password = self.cleaned_data.get('password1')
-        if len(password) < 8:
-            raise ValidationError('Parol kamida 8 belgidan iborat bo‘lishi kerak.')
-        return password
 
     def clean_password2(self):
         password1 = self.cleaned_data.get('password1')
         password2 = self.cleaned_data.get('password2')
-        if password1 and password2 and password1 != password2:
-            raise ValidationError('Parollar mos kelmadi.')
+
+        if password1 != password2:
+            raise ValidationError("Parollar bir xil emas.")
+
         return password2
 
     def save(self, commit=True):
         user = super().save(commit=False)
         user.set_password(self.cleaned_data['password1'])
+
         if commit:
             user.save()
+
         return user
 
 
-# accounts/forms.py
+
+class UserLoginForm(forms.Form):
+    username = forms.CharField()
+    password = forms.CharField(widget=forms.PasswordInput)
 
 
-class UserLoginForm(AuthenticationForm):
-    username = forms.CharField(
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Foydalanuvchi nomi'})
-    )
-    password = forms.CharField(
-        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Parol'})
-    )
+
+
+
+class ChangePasswordForm(forms.Form):
+    old_password = forms.CharField()
+    new_password1 = forms.CharField()
+    new_password2 = forms.CharField()
+
+    def __init__(self, user, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.user = user
+
+    def clean_old_password(self):
+        old_password = self.cleaned_data.get("old_password")
+
+        if not self.user.check_password(old_password):
+            raise ValidationError("Eski parol noto'g'ri.")
+
+        return old_password
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        new_password1 = cleaned_data.get("new_password1")
+        new_password2 = cleaned_data.get("new_password2")
+
+        if new_password1 != new_password2:
+            raise ValidationError("Yangi parollar mos kelmadi.")
+
+        return cleaned_data
+
+    def save(self):
+        self.user.set_password(self.cleaned_data["new_password1"])
+        self.user.save()
+        return self.user

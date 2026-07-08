@@ -1,10 +1,10 @@
 # apps/accounts/views.py
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout, update_session_auth_hash
-from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib import messages
-from .forms import UserRegistrationForm, UserLoginForm
+from .forms import UserRegistrationForm, UserLoginForm, ChangePasswordForm
 from profiles.models import CandidateProfile, CompanyProfile
+from django.contrib.auth.decorators import login_required
 
 
 def register(request):
@@ -26,30 +26,47 @@ def register(request):
     return render(request, 'accounts/register.html', {'form': form})
 
 def login_view(request):
-    if request.method == 'POST':
-        form = UserLoginForm(request, data=request.POST)   # Muhim: request ni birinchi argument sifatida berish
+    if request.method == "POST":
+        form = UserLoginForm(request.POST)
+
         if form.is_valid():
-            user = form.get_user()
-            login(request, user)
-            return redirect('home')
-        else:
-            messages.error(request, 'Login yoki parol xato!')
+            username = form.cleaned_data["username"]
+            password = form.cleaned_data["password"]
+
+            user = authenticate(
+                request,
+                username=username,
+                password=password
+            )
+
+            if user is not None:
+                login(request, user)
+                messages.success(request, "Muvaffaqiyatli tizimga kirdingiz.")
+                return redirect("home")
+            else:
+                messages.error(request, "Login yoki parol noto'g'ri.")
     else:
         form = UserLoginForm()
-    return render(request, 'accounts/login.html', {'form': form})
+
+    return render(request, "accounts/login.html", {"form": form})
 
 def logout_view(request):
     logout(request)
     return redirect('home')
 
+@login_required
 def change_password(request):
-    if request.method == 'POST':
-        form = PasswordChangeForm(request.user, request.POST)
+    if request.method == "POST":
+        form = ChangePasswordForm(request.user, request.POST)
+
         if form.is_valid():
             user = form.save()
             update_session_auth_hash(request, user)
-            messages.success(request, 'Parol muvaffaqiyatli o‘zgartirildi!')
-            return redirect('dashboard')
+            messages.success(request, "Parol muvaffaqiyatli o'zgartirildi.")
+            return redirect("home")
+        else:
+            messages.error(request, "Parolni o'zgartirishda xatolik yuz berdi.")
     else:
-        form = PasswordChangeForm(request.user)
-    return render(request, 'accounts/change_password.html', {'form': form})
+        form = ChangePasswordForm(request.user)
+
+    return render(request, "accounts/change_password.html", {"form": form})

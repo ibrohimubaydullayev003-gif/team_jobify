@@ -25,11 +25,11 @@ from django.views.generic import TemplateView
 urlpatterns = [
     path('admin/', admin.site.urls),
     
-    # Bosh sahifa – vakansiyalar ro‘yxatiga yo‘naltiramiz
-    path('', TemplateView.as_view(template_name='home.html'), name='home'),
-    # path('', lambda request: redirect('vacancies:list'), name='home'),
     
-    # Ilovalar URL’lari
+    path('', TemplateView.as_view(template_name='home.html'), name='home'),
+    
+    
+
     path('accounts/', include('accounts.urls')),
     path('profile/', include('profiles.urls')),
     path('resumes/', include('resumes.urls')),
